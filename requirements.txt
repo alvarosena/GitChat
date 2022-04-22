@@ -4,3 +4,4 @@ flask-marshmallow
 python-dotenv
 Requests
 GitHub-Flask
+Flask-Migrate

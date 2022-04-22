@@ -11,4 +11,4 @@ def authenticate_user():
     data = request.json
 
     result = authenticateUserService.authenticate(data)
-    return jsonify(result) 
+    return jsonify(result), 201 

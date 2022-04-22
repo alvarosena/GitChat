@@ -1,5 +1,6 @@
 import os
 import requests
+from models import db, Employer, employer_schema
 
 class AuthenticateUserService:
     def authenticate(self, data):
@@ -25,6 +26,11 @@ class AuthenticateUserService:
         
         )
         data = user.json()
-        return data
+        
+        employer = Employer(name=data['name'], avatar_url=data['avatar_url'], github_id=data['id'])
+        db.session.add(employer)
+        db.session.commit()
+
+        return employer_schema.dump(employer)
     
 
