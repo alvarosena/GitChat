@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, redirect, request
 from models import db, ma
 from flask_migrate import Migrate
-from controllers.authenticate_user_controller import authentication
+from routes.routes import routes
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
@@ -13,6 +13,8 @@ load_dotenv()
 db.init_app(app)
 ma.init_app(app)
 migrate = Migrate(app, db)
+
+routes(app)
 
 GITHUB_CLIENT_ID = os.getenv('GITHUB_CLIENT_ID')
 
@@ -30,5 +32,3 @@ def callback():
     code = args['code']
     
     return jsonify(code)
-
-app.register_blueprint(authentication, url_prefix='/api/v1')

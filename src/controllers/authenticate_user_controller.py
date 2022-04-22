@@ -6,9 +6,12 @@ authentication = Blueprint('authentication', __name__)
 
 @authentication.route('/authenticate', methods=['POST'])
 def authenticate_user():
-    authenticateUserService = AuthenticateUserService()
+    try:
+        authenticateUserService = AuthenticateUserService()
 
-    data = request.json
+        data = request.json
 
-    result = authenticateUserService.authenticate(data)
-    return jsonify(result), 201 
+        result = authenticateUserService.authenticate(data)
+        return jsonify(result), 201 
+    except Exception as err:
+        return jsonify({'error': str(err)}), 400

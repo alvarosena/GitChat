@@ -9,10 +9,10 @@ class AuthenticateUserService:
                 'client_id': os.getenv('GITHUB_CLIENT_ID'),
                 'client_secret': os.getenv('GITHUB_CLIENT_SECRET'),
                 'code': data['code']
-        },
+            },
             headers = {
                 'Accept': 'application/json',
-        }
+            }
         )
 
         data = response.json()
@@ -26,11 +26,16 @@ class AuthenticateUserService:
         
         )
         data = user.json()
-        
-        employer = Employer(name=data['name'], avatar_url=data['avatar_url'], github_id=data['id'])
-        db.session.add(employer)
-        db.session.commit()
 
-        return employer_schema.dump(employer)
+        employer_exists = Employer.query.filter_by(github_id=data['id']).first()
+
+        if employer_exists:
+            raise Exception("Employer already exists")
+        else:
+            employer = Employer(name=data['name'], avatar_url=data['avatar_url'], github_id=data['id'])
+            db.session.add(employer)
+            db.session.commit()
+
+            return employer_schema.dump(employer)
     
 
