@@ -5,3 +5,4 @@ python-dotenv
 Requests
 GitHub-Flask
 Flask-Migrate
+flask-jwt-extended

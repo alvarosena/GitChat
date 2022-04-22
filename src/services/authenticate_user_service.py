@@ -1,6 +1,7 @@
 import os
 import requests
-from models import db, Employer, employer_schema
+from models import db, Employer
+from flask_jwt_extended import create_access_token
 
 class AuthenticateUserService:
     def authenticate(self, data):
@@ -16,26 +17,25 @@ class AuthenticateUserService:
         )
 
         data = response.json()
-        access_token = data['access_token']
+        github_access_token = data['access_token']
 
         user = requests.get('https://api.github.com/user', 
             headers = {
                 'Accept': 'application/json',
-                'authorization': f'Bearer {access_token}'
+                'authorization': f'Bearer {github_access_token}'
             }
         
         )
         data = user.json()
 
-        employer_exists = Employer.query.filter_by(github_id=data['id']).first()
+        employer = Employer.query.filter_by(github_id=data['id']).first()
 
-        if employer_exists:
-            raise Exception("Employer already exists")
-        else:
+        if not employer:
             employer = Employer(name=data['name'], avatar_url=data['avatar_url'], github_id=data['id'])
             db.session.add(employer)
             db.session.commit()
-
-            return employer_schema.dump(employer)
-    
-
+            
+        access_token = {
+            'access_token': create_access_token(identity=employer.id)
+        }
+        return access_token
