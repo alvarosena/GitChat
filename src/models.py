@@ -13,11 +13,12 @@ class Employer(db.Model):
     name = db.Column(db.String, nullable=False)
     avatar_url = db.Column(db.String, nullable=False)
     github_id = db.Column(db.String, nullable=False)
+    work_as = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime(timezone=True), default=func.now())
 
 class EmployerSchema(ma.Schema):
     class Meta:
-        fields = ("id", "name", "avatar_url", "github_id", "created_at")
+        fields = ("id", "name", "avatar_url", "github_id", "work_as", "created_at")
 
 employer_schema = EmployerSchema()
 employers_schema = EmployerSchema(many=True)
