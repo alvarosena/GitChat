@@ -14,4 +14,4 @@ def authenticate_user():
         result = authenticateUserService.authenticate(data)
         return jsonify(result), 201 
     except Exception as err:
-        return jsonify({'error': str(err)}), 400
+        return jsonify({'message': str(err)}), 400

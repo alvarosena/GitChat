@@ -14,7 +14,9 @@ class Employer(db.Model):
     avatar_url = db.Column(db.String, nullable=False)
     github_id = db.Column(db.String, nullable=False)
     work_as = db.Column(db.String, nullable=True)
+    company_id = db.Column(db.String, db.ForeignKey('companies.id'))
     created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+
 
 class EmployerSchema(ma.Schema):
     class Meta:
@@ -22,3 +24,19 @@ class EmployerSchema(ma.Schema):
 
 employer_schema = EmployerSchema()
 employers_schema = EmployerSchema(many=True)
+
+class Company(db.Model):
+    __tablename__ = 'companies'
+
+    id = db.Column(db.String, primary_key=True, default=Uuid.generate())
+    name = db.Column(db.String, nullable=False)
+    avatar_url = db.Column(db.String, nullable=True)
+    created_at = db.Column(db.DateTime(timezone=True), default=func.now())
+    employers = db.relationship('Employer')
+
+class CompanySchema(ma.Schema):
+    class Meta:
+        fields = ("id", "name", "avatar_url", "created_at")
+
+company_schema = CompanySchema()
+companies_schema = CompanySchema(many=True)

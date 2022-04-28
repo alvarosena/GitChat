@@ -23,4 +23,4 @@ def create_work():
         employer = employersService.create_work(data, employer_id)
         return jsonify(employer)
     except Exception as err:
-        return jsonify({'error': str(err)}), 404
+        return jsonify({'message': str(err)}), 404
